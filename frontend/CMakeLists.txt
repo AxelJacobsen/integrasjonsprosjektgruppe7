@@ -15,6 +15,15 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "src/pch.hpp")
 # Set C++ version to C++20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE GLM_FORCE_SILENT_WARNINGS) # Warning from glm
+
+# Enable warnings
+if(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W3 /WX)
+else()
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 # Add third party libraries
 find_package(OpenGL REQUIRED)
 
