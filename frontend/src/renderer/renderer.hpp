@@ -1,7 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include "ebo.hpp"
 #include "vao.hpp"
 #include "vbo.hpp"

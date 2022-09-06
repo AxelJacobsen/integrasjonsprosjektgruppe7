@@ -1,11 +1,7 @@
 ﻿#include <iostream>
 #include "misc/settings.hpp"
-#include "renderer/renderer.hpp"
 #include "game/game.hpp"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/ext/matrix_clip_space.hpp>
 
 void error_callback(int, const char*);
 void GLAPIENTRY message_callback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, const void*);
@@ -21,13 +17,14 @@ int main() {
 		std::cerr << "Failed to initialize GLFW!\n";
 		return EXIT_FAILURE;
 	}
-	
+
 	// Set OpenGL version
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	// Create the window
-	auto* window = glfwCreateWindow(static_cast<int>(settings::window_size.x), static_cast<int>(settings::window_size.y), "Map game", nullptr, nullptr);
+	auto* window = glfwCreateWindow(static_cast<int>(settings::window_size.x),
+	                                static_cast<int>(settings::window_size.y), "Map game", nullptr, nullptr);
 	if (!window) {
 		std::cerr << "Failed to create the window!\n";
 		return EXIT_FAILURE;
@@ -98,8 +95,11 @@ void GLAPIENTRY message_callback(GLenum source,
                                  const GLchar* message,
                                  const void* userParam) {
 	if (type == GL_DEBUG_TYPE_ERROR) {
-		std::cerr << "[GL CALLBACK] type " << type << ", " << "severity = " << severity << ", " << "message = " << message << "\n";
-	} else {
-		std::cout << "[GL CALLBACK][WARN] type " << type << ", " << "severity = " << severity << ", " << "message = " << message << "\n";
+		std::cerr << "[GL CALLBACK] type " << type << ", " << "severity = " << severity << ", " << "message = " <<
+			message << "\n";
+	}
+	else {
+		std::cout << "[GL CALLBACK][WARN] type " << type << ", " << "severity = " << severity << ", " << "message = " <<
+			message << "\n";
 	}
 }

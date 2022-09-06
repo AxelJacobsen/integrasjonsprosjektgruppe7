@@ -1,9 +1,5 @@
 #include "game.hpp"
 
-#include <iostream>
-#include <GLFW/glfw3.h>
-#include <glm/ext/matrix_clip_space.hpp>
-
 #include "../misc/settings.hpp"
 #include "../renderer/texture/texture.hpp"
 

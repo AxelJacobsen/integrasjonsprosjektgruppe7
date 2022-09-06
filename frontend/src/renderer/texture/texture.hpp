@@ -1,8 +1,4 @@
 #pragma once
-#include <iostream>
-#include <optional>
-#include <glad/glad.h>
-#include <glm/vec2.hpp>
 
 // NOTE: We only support a single texture slot atm
 class Texture {

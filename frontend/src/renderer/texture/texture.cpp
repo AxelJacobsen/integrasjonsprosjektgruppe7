@@ -1,6 +1,5 @@
 #include "texture.hpp"
 
-#include <glm/vec2.hpp>
 #include <stb/stb_image.h>
 
 std::optional<Texture> Texture::create(std::string_view texture_path) {

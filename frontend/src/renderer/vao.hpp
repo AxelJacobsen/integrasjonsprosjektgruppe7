@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstdint>
-#include "glad/glad.h"
-
 class VAO {
 public:
     VAO() = default;
@@ -11,7 +8,6 @@ public:
         glGenVertexArrays(1, &m_id);
         bind();
     }
-
 
     void link_attrib(GLuint layout, GLint num_components, GLenum type, GLboolean normalized, GLsizei stride, uintptr_t offset) {
         // Tell OpenGL how to interpret data at 'layout'

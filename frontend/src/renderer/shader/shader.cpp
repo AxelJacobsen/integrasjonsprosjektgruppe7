@@ -1,6 +1,4 @@
 #include "shader.hpp"
-#include <iostream>
-#include "glm/gtc/type_ptr.hpp"
 #include "../../misc/utils.hpp"
 
 

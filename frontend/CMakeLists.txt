@@ -10,6 +10,8 @@ target_link_libraries(${PROJECT_NAME} glm glfw glad OpenGL::GL)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "third_party/")
 
+target_precompile_headers(${PROJECT_NAME} PRIVATE "src/pch.hpp")
+
 # Set C++ version to C++20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
