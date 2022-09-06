@@ -3,10 +3,12 @@
 project("mapproject")
 
 # Add target binary
-add_executable (${PROJECT_NAME} "src/main.cpp" "src/renderer/renderer.cpp")
+add_executable (${PROJECT_NAME} "src/main.cpp" "src/renderer/renderer.cpp" "src/misc/stb.cpp" "src/renderer/shader/shader.cpp" "src/misc/utils.hpp" "third_party/stb/stb_image.h" "src/game/game.cpp" "src/renderer/texture/texture.cpp")
 
 # Link third party libraries to target binary
 target_link_libraries(${PROJECT_NAME} glm glfw glad OpenGL::GL)
+
+target_include_directories(${PROJECT_NAME} PRIVATE "third_party/")
 
 # Set C++ version to C++20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
