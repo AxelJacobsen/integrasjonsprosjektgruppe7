@@ -3,7 +3,14 @@
 project("mapproject")
 
 # Add target binary
-add_executable (${PROJECT_NAME} "src/main.cpp" "src/renderer/renderer.cpp" "src/misc/stb.cpp" "src/renderer/shader/shader.cpp" "src/misc/utils.hpp" "third_party/stb/stb_image.h" "src/game/game.cpp" "src/renderer/texture/texture.cpp")
+add_executable (${PROJECT_NAME} 
+	"src/game/game.cpp"
+	"src/main.cpp"
+	"src/misc/stb.cpp"
+	"src/misc/utils.hpp"
+	"src/renderer/renderer.cpp"
+	"src/renderer/shader/shader.cpp"
+	"src/renderer/texture/texture.cpp")
 
 # Link third party libraries to target binary
 target_link_libraries(${PROJECT_NAME} glm glfw glad OpenGL::GL)
