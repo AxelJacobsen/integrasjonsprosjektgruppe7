@@ -1,5 +1,5 @@
 #pragma once
-#include <fstream>
+#include "../pch.hpp"
 
 namespace utils {
 	inline std::string load_file(const std::string_view path) {
@@ -15,4 +15,4 @@ namespace utils {
 			std::istreambuf_iterator<char>()
 		};
 	}
-}
+	}

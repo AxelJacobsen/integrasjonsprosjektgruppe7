@@ -14,10 +14,7 @@ void Game::init(GLFWwindow* window) {
 	m_font_renderer = std::make_unique<FontRenderer>(projection);
 
 	const auto spritesheet = Texture::create("../../../data/assets/pacman.png");
-	if (!spritesheet.has_value()) {
-		std::cerr << "Failed to load spritesheet!\n";
-		exit(EXIT_FAILURE);
-	}
+	VERIFY(spritesheet.has_value(), "Failed to load spritesheet");
 
 	m_sprite_renderer->set_spritesheet(spritesheet.value());
 

@@ -2,13 +2,11 @@
 
 #include <stb/stb_image.h>
 
+// TODO: optional is made redundant due to the verification checks, change?
 std::optional<Texture> Texture::create(std::string_view texture_path) {
 	int channels = 0, width, height;
 	auto* pixels = stbi_load(texture_path.data(), &width, &height, &channels, 0);
-	if (!pixels) {
-		std::cerr << "Failed to load texture: " << texture_path << "\n";
-		return {};
-	}
+	VERIFY(pixels, std::format("Failed to load texture: {}", texture_path));
 
 	Texture texture;
 
@@ -27,10 +25,7 @@ std::optional<Texture> Texture::create(std::string_view texture_path) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	if (channels < 3 || channels > 4) {
-		std::cerr << "[TEXTURE] Failed to load " << texture_path << ", incorrect number of channels: " << channels << "\n";
-		return {};
-	}
+	VERIFY(channels == 3 || channels == 4, "Only 3 or 4 channel textures are supported!");
 
 	const auto format = channels == 4 ? GL_RGBA : GL_RGB;
 

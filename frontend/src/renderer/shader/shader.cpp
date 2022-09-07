@@ -7,32 +7,23 @@ bool validate_compilation(GLuint);
 std::optional<Shader> Shader::create(std::string_view vertex_src_path, std::string_view fragment_src_path) {
 	const auto vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	const auto vertex_source = utils::load_file(vertex_src_path);
-	if (vertex_source.empty()) {
-		std::cerr << "Failed to load vertex source file " << vertex_src_path << "\n";
-		return {};
-	}
+	// TODO: Just give a warning?
+	VERIFY(!vertex_source.empty(), std::format("Failed to load vertex source file {}", vertex_src_path));
+
 	const auto* vss = vertex_source.data();
 	glShaderSource(vertex_shader, 1, &vss, nullptr);
 	glCompileShader(vertex_shader);
-	if (!validate_compilation(vertex_shader)) {
-		std::cerr << "Failed to compile the vertex shader: " << vertex_src_path << "\n";
-		return {};
-	}
+	VERIFY(validate_compilation(vertex_shader));
 
 	const auto fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	const auto fragment_source = utils::load_file(fragment_src_path);
-	if (fragment_source.empty()) {
-		std::cerr << "Failed to load fragment source file " << fragment_src_path << "\n";
-		return {};
-	}
+	VERIFY(!fragment_source.empty(), std::format("Failed to load fragment source file {}", fragment_src_path));
 
 	const auto* fss = fragment_source.data();
 	glShaderSource(fragment_shader, 1, &fss, nullptr);
 	glCompileShader(fragment_shader);
-	if (!validate_compilation(fragment_shader)) {
-		std::cerr << "Failed to compile the fragment shader: " << fragment_src_path << "\n";
-		return {};
-	}
+	VERIFY(validate_compilation(fragment_shader));
+
 	Shader shader;
 	// Create the shader program
 	shader.m_id = glCreateProgram();
@@ -89,7 +80,7 @@ bool validate_compilation(GLuint shader_id) {
 		GLchar log[1024];
 		glGetShaderInfoLog(shader_id, sizeof(log), &log_len, log);
 
-		std::cerr << "[SHADER] Shader info log: " << log << "\n";
+		logger::error("Shader info log: {}", log);
 		return false;
 	}
 	return true;

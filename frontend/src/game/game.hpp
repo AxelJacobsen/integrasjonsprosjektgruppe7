@@ -1,7 +1,4 @@
 #pragma once
-#include <memory>
-#include <array>
-
 #include "../renderer/renderer.hpp"
 #include "../renderer/font_renderer.hpp"
 

@@ -30,10 +30,7 @@ SpriteRenderer::SpriteRenderer(glm::mat4 projection) {
 
 	// TODO: don't use relative paths like this
 	const auto shader = Shader::create("../../../data/shaders/sprite.vert", "../../../data/shaders/sprite.frag");
-	if (!shader.has_value()) {
-		std::cerr << "Failed to initialize texture shader!\n";
-		exit(EXIT_FAILURE);
-	}
+	VERIFY(shader.has_value(), "Failed to initialize the texture shader!");
 
 	m_shader = shader.value();
 
