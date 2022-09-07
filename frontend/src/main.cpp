@@ -94,12 +94,14 @@ void GLAPIENTRY message_callback(GLenum source,
                                  GLsizei length,
                                  const GLchar* message,
                                  const void* userParam) {
-	if (type == GL_DEBUG_TYPE_ERROR) {
-		std::cerr << "[GL CALLBACK] type " << type << ", " << "severity = " << severity << ", " << "message = " <<
-			message << "\n";
-	}
-	else {
-		std::cout << "[GL CALLBACK][WARN] type " << type << ", " << "severity = " << severity << ", " << "message = " <<
-			message << "\n";
+	if (severity >= GL_DEBUG_SEVERITY_LOW) {
+		if (type == GL_DEBUG_TYPE_ERROR) {
+			std::cerr << "[GL CALLBACK] type " << type << ", " << "severity = " << severity << ", " << "message = " <<
+				message << "\n";
+		}
+		else {
+			std::cout << "[GL CALLBACK][WARN] type " << type << ", " << "severity = " << severity << ", " << "message = " <<
+				message << "\n";
+		}
 	}
 }
