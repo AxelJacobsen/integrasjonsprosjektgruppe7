@@ -8,14 +8,15 @@ add_executable (${PROJECT_NAME}
 	"src/main.cpp"
 	"src/misc/stb.cpp"
 	"src/misc/utils.hpp"
+	"src/renderer/font_renderer.cpp"
 	"src/renderer/renderer.cpp"
 	"src/renderer/shader/shader.cpp"
 	"src/renderer/texture/texture.cpp")
 
 # Link third party libraries to target binary
-target_link_libraries(${PROJECT_NAME} glm glfw glad OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} glm glfw glad OpenGL::GL freetype)
 
-target_include_directories(${PROJECT_NAME} PRIVATE "third_party/")
+target_include_directories(${PROJECT_NAME} PRIVATE "third_party/" "third_party/freetype/include")
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "src/pch.hpp")
 
@@ -37,3 +38,4 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(third_party/glad)
 add_subdirectory(third_party/glfw)
 add_subdirectory(third_party/glm)
+add_subdirectory(third_party/freetype)

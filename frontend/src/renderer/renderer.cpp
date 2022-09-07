@@ -63,6 +63,8 @@ void SpriteRenderer::draw_sprite(glm::vec2 pos, float angle, glm::vec2 scale,
 	const auto grid_size = static_cast<glm::vec2>(m_spritesheet.size()) / sprite_region.size;
 	const auto offset = sprite_region.pos / (static_cast<glm::vec2>(m_spritesheet.size()));
 
+	m_spritesheet.activate();
+	m_spritesheet.bind();
 	// Transfer the uniforms to the GPU
 	m_shader.set_mat4("u_model", model);
 	m_shader.set_2fv("u_tex_grid_size", grid_size);
@@ -76,4 +78,6 @@ void SpriteRenderer::draw_sprite(glm::vec2 pos, float angle, glm::vec2 scale,
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 	m_vao.unbind();
+	m_vbo.unbind();
+	m_ebo.unbind();
 }

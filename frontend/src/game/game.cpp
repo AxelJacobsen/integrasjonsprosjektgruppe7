@@ -11,6 +11,7 @@ void Game::init(GLFWwindow* window) {
 	                                  1.0f, -10.0f);
 
 	m_sprite_renderer = std::make_unique<SpriteRenderer>(projection);
+	m_font_renderer = std::make_unique<FontRenderer>(projection);
 
 	const auto spritesheet = Texture::create("../../../data/assets/pacman.png");
 	if (!spritesheet.has_value()) {
@@ -31,9 +32,13 @@ void Game::update(float dt) {
 
 	m_cursor_x = static_cast<float>(x);
 	m_cursor_y = static_cast<float>(y);
+
+	m_fps.update(dt);
 }
 
 void Game::render() {
+	m_font_renderer->draw_text(std::to_string(m_fps.fps()), {5,5}, 1.f);
+
 	draw_sprite(GHOST, glm::vec2{100.f, 100.f}, 100.f);
 	draw_sprite(PACMAN, glm::vec2{m_cursor_x, m_cursor_y}, 100.f);
 }
