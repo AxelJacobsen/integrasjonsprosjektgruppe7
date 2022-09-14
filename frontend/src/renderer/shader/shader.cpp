@@ -1,47 +1,28 @@
 #include "shader.hpp"
 #include "../../misc/utils.hpp"
 
+GLuint create_shader(GLenum type, std::string_view source_path);
 
-bool validate_compilation(GLuint);
 
-std::optional<Shader> Shader::create(std::string_view vertex_src_path, std::string_view fragment_src_path) {
-	const auto vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	const auto vertex_source = utils::load_file(vertex_src_path);
-	// TODO: Just give a warning?
-	VERIFY(!vertex_source.empty(), std::format("Failed to load vertex source file {}", vertex_src_path));
+Shader::Shader(std::string_view vertex_src_path, std::string_view fragment_src_path) {
+	const auto vertex_shader = create_shader(GL_VERTEX_SHADER, vertex_src_path);
+	const auto fragment_shader = create_shader(GL_FRAGMENT_SHADER, fragment_src_path);
 
-	const auto* vss = vertex_source.data();
-	glShaderSource(vertex_shader, 1, &vss, nullptr);
-	glCompileShader(vertex_shader);
-	VERIFY(validate_compilation(vertex_shader));
-
-	const auto fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	const auto fragment_source = utils::load_file(fragment_src_path);
-	VERIFY(!fragment_source.empty(), std::format("Failed to load fragment source file {}", fragment_src_path));
-
-	const auto* fss = fragment_source.data();
-	glShaderSource(fragment_shader, 1, &fss, nullptr);
-	glCompileShader(fragment_shader);
-	VERIFY(validate_compilation(fragment_shader));
-
-	Shader shader;
 	// Create the shader program
-	shader.m_id = glCreateProgram();
+	m_id = glCreateProgram();
 
 	// Attach the shaders to the newly created shader program
-	glAttachShader(shader.m_id, vertex_shader);
-	glAttachShader(shader.m_id, fragment_shader);
+	glAttachShader(m_id, vertex_shader);
+	glAttachShader(m_id, fragment_shader);
 
 	// Link the shader program
-	glLinkProgram(shader.m_id);
+	glLinkProgram(m_id);
 
 	// Clean up the shaders, we no longer need them after linking to the final shader program
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 
-	glUseProgram(shader.m_id);
-
-	return shader;
+	glUseProgram(m_id);
 }
 
 /*
@@ -84,4 +65,17 @@ bool validate_compilation(GLuint shader_id) {
 		return false;
 	}
 	return true;
+}
+
+GLuint create_shader(GLenum type, std::string_view source_path) {
+	const auto shader = glCreateShader(type);
+	const auto shader_source = utils::load_file(source_path);
+	// TODO: Just give a warning?
+	VERIFY(!shader_source.empty(), std::format("Failed to load shader source file {}", source_path));
+
+	const auto* source = shader_source.data();
+	glShaderSource(shader, 1, &source, nullptr);
+	glCompileShader(shader);
+	VERIFY(validate_compilation(shader));
+	return shader;
 }

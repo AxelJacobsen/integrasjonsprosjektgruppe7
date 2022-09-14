@@ -1,6 +1,7 @@
 #include "font_renderer.hpp"
 
-FontRenderer::FontRenderer(glm::mat4 projection) {
+FontRenderer::FontRenderer(glm::mat4 projection) 
+	: m_shader("../../../data/shaders/font.vert", "../../../data/shaders/font.frag") {
 	m_vao.initialize_and_bind();
 	m_vbo.initialize_and_bind();
 
@@ -8,11 +9,6 @@ FontRenderer::FontRenderer(glm::mat4 projection) {
 
 	// Tell OpenGL how to interpret our vertex data
 	m_vao.link_attrib(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-
-	auto shader = Shader::create("../../../data/shaders/font.vert", "../../../data/shaders/font.frag");
-	VERIFY(shader.has_value(), "Failed to load font shader!");
-
-	m_shader = shader.value();
 
 	// Set projection
 	m_shader.set_mat4("projection", projection);

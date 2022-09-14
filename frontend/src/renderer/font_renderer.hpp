@@ -19,7 +19,6 @@ private:
 	};
 	std::map<char, Character> m_characters{};
 	Shader m_shader{};
-	VAO m_vao;
-	VBO m_vbo;
-
+	VAO m_vao{};
+	VBO m_vbo{};
 };

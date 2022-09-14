@@ -1,6 +1,8 @@
 #include "renderer.hpp"
 
-SpriteRenderer::SpriteRenderer(glm::mat4 projection) {
+SpriteRenderer::SpriteRenderer(glm::mat4 projection) 
+	// TODO: don't use relative paths like this
+	: m_shader("../../../data/shaders/sprite.vert", "../../../data/shaders/sprite.frag") {
 	const GLfloat vertices[] = {
 		//   Coord   |  TexCoord
 		-0.5f, -0.5f, 0.0f, 0.0f, // Lower left corner
@@ -28,11 +30,6 @@ SpriteRenderer::SpriteRenderer(glm::mat4 projection) {
 	// Tell OpenGL how to interpret our vertex data
 	m_vao.link_attrib(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 
-	// TODO: don't use relative paths like this
-	const auto shader = Shader::create("../../../data/shaders/sprite.vert", "../../../data/shaders/sprite.frag");
-	VERIFY(shader.has_value(), "Failed to initialize the texture shader!");
-
-	m_shader = shader.value();
 
 	m_shader.activate();
 	m_shader.set_mat4("u_projection", projection);
