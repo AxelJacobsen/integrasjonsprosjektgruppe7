@@ -21,6 +21,7 @@ private:
 	int m_frames{ 0 };
 	int m_fps{ 0 };
 };
+
 class Game {
 public:
 	void init(GLFWwindow* window);
