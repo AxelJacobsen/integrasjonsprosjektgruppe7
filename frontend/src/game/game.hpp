@@ -1,6 +1,8 @@
 #pragma once
 #include "../renderer/sprite_renderer.hpp"
 #include "../renderer/font_renderer.hpp"
+#include "entity/ecs.hpp"
+#include "entity/components.hpp"
 
 class FPS {
 public:
@@ -29,22 +31,40 @@ public:
 	void render();
 
 private:
-	enum SpriteID {
-		PACMAN,
-		GHOST
-	};
-
-	void draw_sprite(SpriteID sprite, glm::vec2 pos, float scale = 1.f) {
-		m_sprite_renderer->draw_sprite(m_sprites.at(sprite), pos, scale);
+	void draw_sprite(SpriteInfo sprite, glm::vec2 pos, float scale = 1.f, float rotation = 0.f) {
+		m_sprite_renderer->draw_sprite(sprite, pos, scale, rotation);
 	}
 
+	ecs::Entity create_ghost(glm::vec2 pos) {
+		// Create the entity
+		const auto ghost = m_registry.create_entity();
+		// Create the sprite (with the offset within the spritesheet and the size)
+		const auto sprite = SpriteInfo{{300, 10 + (60 * 3) + (10 * 3)}, {60, 60}};
+		// Add the sprite component
+		m_registry.add_component(ghost, comp::Sprite{ sprite });
+		// Add the position component
+		m_registry.add_component(ghost, comp::Position{ pos });
+		m_registry.add_component(ghost, comp::Rotation{ 0.f });
+		m_registry.add_component(ghost, comp::Scale{ });
+		return ghost;
+	}
+
+	ecs::Entity create_pacman() {
+		// See create_ghost for documentation ^
+		const auto pacman = m_registry.create_entity();
+		const auto sprite = SpriteInfo{{10, 10 + (60 * 3) + (10 * 3)}, {60, 60}};
+		m_registry.add_component(pacman, comp::Sprite{ sprite});
+		m_registry.add_component(pacman, comp::Position{ {0,0 } });
+		return pacman;
+	}
 private:
 	GLFWwindow* m_window{nullptr};
+	FPS m_fps{};
+
 	std::unique_ptr<SpriteRenderer> m_sprite_renderer{nullptr};
 	std::unique_ptr<FontRenderer> m_font_renderer{nullptr};
+	ecs::Registry m_registry{};
 
-	std::array<Sprite, 2> m_sprites{};
-
-	float m_cursor_x{0}, m_cursor_y{0};
-	FPS m_fps{};
+	ecs::Entity m_pacman{};
+	std::vector<ecs::Entity> m_ghosts{};
 };

@@ -459,7 +459,7 @@ namespace ecs {
 		}
 
 		template <typename T>
-		bool entity_has_component(Entity entity) const {
+		bool has_component(Entity entity) const {
 			return m_component_manager->entity_has_component<T>(entity);
 		}
 

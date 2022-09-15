@@ -6,19 +6,14 @@
 #include "shader/shader.hpp"
 #include "texture/texture.hpp"
 
-struct Sprite {
-	glm::vec2 offset{};
-	glm::vec2 size{};
-};
-
 class SpriteRenderer {
 public:
 	SpriteRenderer(glm::mat4 projection, int max_instances);
 
 	void draw_sprite(glm::vec2 pos, float angle, glm::vec2 scale, Rect sprite_region);
 
-	void draw_sprite(Sprite sprite, glm::vec2 pos, float scale = 1.f) {
-		draw_sprite(pos, 0.f, glm::vec2{scale, scale}, Rect{sprite.offset, sprite.size});
+	void draw_sprite(SpriteInfo sprite, glm::vec2 pos, float scale = 1.f, float rotation = 0.f) {
+		draw_sprite(pos, rotation, glm::vec2{scale, scale}, Rect{sprite.offset, sprite.size});
 	}
 
 	void set_spritesheet(const Texture& spritesheet) {
