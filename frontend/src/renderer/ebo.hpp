@@ -21,7 +21,7 @@ public:
         bind();
     }
 
-    void allocate(const GLsizeiptr size) {
+    void allocate(const GLsizeiptr size) const {
         // Bind/set as active EBO
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 
@@ -29,7 +29,7 @@ public:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
     }
 
-    void update(const GLuint* indices, const GLsizeiptr size, const GLintptr offset = 0) {
+    void update(const GLuint* indices, const GLsizeiptr size, const GLintptr offset = 0) const {
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, indices);
     }
 

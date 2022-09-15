@@ -14,7 +14,7 @@ SpriteRenderer::SpriteRenderer(glm::mat4 projection, int max_instances)
 	m_instances.resize(max_instances);
 
 	// Allocate VRAM for the data
-	m_instance_vbo.allocate(sizeof(SpriteInstanceVertex) * max_instances);
+	m_instance_vbo.allocate(static_cast<GLsizeiptr>(sizeof(SpriteInstanceVertex)) * max_instances);
 
 	m_vertex_vbo.allocate(sizeof(SpriteVertex) * static_vertices.size());
 	m_ebo.allocate(sizeof(static_indices));
@@ -82,7 +82,7 @@ void SpriteRenderer::update_transformations() {
 
 	m_instance_vbo.bind();
 	// Transfer buffer data to the GPU
-	m_instance_vbo.update(m_instance_data.data(), m_instance_count * sizeof(SpriteInstanceVertex));
+	m_instance_vbo.update(m_instance_data.data(), static_cast<GLintptr>(m_instance_count * sizeof(SpriteInstanceVertex)));
 }
 void SpriteRenderer::render() {
 	m_shader.activate();

@@ -2,7 +2,6 @@
 #include "../renderer/shader/shader.hpp"
 #include "../renderer/vao.hpp"
 #include "../renderer/vbo.hpp"
-#include "../renderer/ebo.hpp"
 
 class FontRenderer {
 public:

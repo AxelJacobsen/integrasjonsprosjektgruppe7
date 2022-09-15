@@ -1,5 +1,4 @@
-﻿#include <iostream>
-#include "misc/settings.hpp"
+﻿#include "misc/settings.hpp"
 #include "game/game.hpp"
 
 

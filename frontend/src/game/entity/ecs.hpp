@@ -67,7 +67,7 @@ namespace ecs {
 			m_signatures[entity] = signature;
 		}
 
-		Signature get_signature(Entity entity) {
+		[[nodiscard]] std::bitset<MAX_COMPONENTS> get_signature(Entity entity) const {
 			if (!valid_entity(entity)) {
 				logger::warning("Invalid entity!");
 				return m_signatures.at(0);
@@ -76,7 +76,7 @@ namespace ecs {
 			return m_signatures.at(entity);
 		}
 
-		bool valid_entity(Entity entity) const {
+		[[nodiscard]] bool valid_entity(Entity entity) const {
 			return entity < MAX_ENTITIES; // no need to check if below zero when unsigned
 		}
 
@@ -93,16 +93,15 @@ namespace ecs {
 	};
 
 	template <typename T>
-	class ComponentArray : public IComponentArray {
+	class ComponentArray final : public IComponentArray {
 	public:
 		static constexpr size_t INVALID = -1;
 
 		ComponentArray() {
-			//std::ranges::fill(m_entity_to_index_table, INVALID);
-			std::fill(m_entity_to_index_table.begin(), m_entity_to_index_table.end(), INVALID);
+			std::ranges::fill(m_entity_to_index_table, INVALID);
 		}
 
-		bool has_entity(Entity entity) {
+		[[nodiscard]] bool has_entity(Entity entity) const {
 			return m_entity_to_index_table[entity] != INVALID;
 		}
 
@@ -222,7 +221,7 @@ namespace ecs {
 
 		// Get the component type of T
 		template <typename T>
-		ComponentType get_component_type() const {
+		[[nodiscard]] ComponentType get_component_type() const {
 			return type_id<T>;
 		}
 
@@ -359,11 +358,11 @@ namespace ecs {
 				return m_entities.begin() + m_entity_count;
 			}
 
-			constexpr EntityArray::const_iterator begin() const {
+			[[nodiscard]] constexpr EntityArray::const_iterator begin() const {
 				return m_entities.cbegin();
 			}
 
-			constexpr EntityArray::const_iterator end() const {
+			[[nodiscard]] constexpr EntityArray::const_iterator end() const {
 				return m_entities.cbegin() + m_entity_count;
 			}
 
@@ -454,21 +453,21 @@ namespace ecs {
 		}
 
 		template <typename T>
-		bool has_component() const {
+		[[nodiscard]] bool has_component() const {
 			return m_component_manager->has_component<T>();
 		}
 
 		template <typename T>
-		bool has_component(Entity entity) const {
+		[[nodiscard]] bool has_component(Entity entity) const {
 			return m_component_manager->entity_has_component<T>(entity);
 		}
 
 		template <typename T>
-		ComponentType get_component_type() const {
+		[[nodiscard]] ComponentType get_component_type() const {
 			return m_component_manager->get_component_type<T>();
 		}
 
-		size_t get_entity_count() const {
+		[[nodiscard]] size_t get_entity_count() const {
 			return m_used_entities.size();
 		}
 

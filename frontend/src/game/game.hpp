@@ -31,7 +31,7 @@ public:
 	void render();
 
 private:
-	void draw_sprite(SpriteInfo sprite, glm::vec2 pos, float scale = 1.f, float rotation = 0.f) {
+	void draw_sprite(SpriteInfo sprite, glm::vec2 pos, float scale = 1.f, float rotation = 0.f) const {
 		m_sprite_renderer->draw_sprite(sprite, pos, scale, rotation);
 	}
 
