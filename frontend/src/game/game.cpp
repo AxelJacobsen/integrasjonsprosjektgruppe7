@@ -34,11 +34,19 @@ void Game::update(float dt) {
 }
 
 void Game::render() {
-	m_font_renderer->draw_text(std::to_string(m_fps.fps()), {5,5}, 1.f);
 
-	draw_sprite(GHOST, glm::vec2{100.f, 100.f}, 100.f);
-	draw_sprite(PACMAN, glm::vec2{200.f, 100.f}, 100.f);
-	draw_sprite(PACMAN, glm::vec2{m_cursor_x, m_cursor_y}, 100.f);
+	static constexpr int rows = 100;
+	static constexpr int cols = 100;
+	static constexpr float size = 10.f;
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			draw_sprite(GHOST, glm::vec2{i * size, j * size}, size);
+		}
+	}
+	//draw_sprite(GHOST, glm::vec2{100.f, 100.f}, 10.f);
+	//draw_sprite(PACMAN, glm::vec2{200.f, 100.f}, 100.f);
+	//draw_sprite(PACMAN, glm::vec2{m_cursor_x, m_cursor_y}, 100.f);
 
 	m_sprite_renderer->render();
+	m_font_renderer->draw_text(std::to_string(m_fps.fps()), {5,5}, 1.f);
 }
