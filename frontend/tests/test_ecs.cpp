@@ -34,7 +34,7 @@ TEST_CASE("View iteration", "[ecs]") {
 
 	auto view = registry.view<Position, Velocity>();
 	int count = 0;
-	view.each([&count](const Position& pos, const Velocity& vel) {
+	view.each([&count](auto _, const Position& pos, const Velocity& vel) {
 		VERIFY(pos.x == (float)count && pos.y == (float)count);
 		count++;
 	});

@@ -5,6 +5,8 @@
 // https://mikejsavage.co.uk/blog/cpp-tricks-type-id.html
 // http://www.slackerparadise.com/ideas/game-programming/ecs-concepts-part-5-entity/
 
+// TODO: add registrable event handlers when components are updated
+
 namespace ecs {
 	class Registry;
 	using Entity = std::uint32_t;
@@ -89,7 +91,6 @@ namespace ecs {
 		virtual ~IComponentArray() = default;
 		virtual void entity_destroyed(Entity entity) = 0;
 	};
-
 
 	template <typename T>
 	class ComponentArray : public IComponentArray {
@@ -274,91 +275,11 @@ namespace ecs {
 		}
 	};
 
-	class System {
-	public:
-		System() = default;
-		System(Registry* registry) : m_registry(registry){}
-		std::set<Entity> m_entities{};
-		Registry* m_registry = nullptr;
-	};
-
-	class SystemManager {
-	private:
-		template <typename T>
-		std::shared_ptr<T> get_system() {
-			return std::static_pointer_cast<T>(m_systems[type_id<T>]);
-		}
-
-	public:
-		template <typename T>
-		bool has_system() {
-			return m_systems[type_id<T>] != nullptr;
-		}
-
-		template <typename T>
-		std::shared_ptr<T> register_system(Registry* registry) {
-			if (has_system<T>()) {
-				logger::warning("System already registered!");
-				return get_system<T>();
-			}
-
-			auto new_system = std::make_shared<T>(registry);
-			// Initialize the system
-			m_systems[type_id<T>] = new_system;
-
-			m_available_systems.push_back(type_id<T>);
-
-			return new_system;
-		}
-
-		template <typename T>
-		void set_signature(Signature signature) {
-			if (!has_system<T>()) {
-				logger::warning("Cannot use system before it is registered!");
-				return;
-			}
-			// Set the signature for this system
-			m_signatures[type_id<T>] = signature;
-		}
-
-		void on_entity_destroyed(Entity entity) const {
-			// Remove entity from all systems
-			for (const auto system_index : m_available_systems) {
-				const auto& system = m_systems[system_index];
-				system->m_entities.erase(entity);
-			}
-		}
-
-		void on_entity_signature_changed(Entity entity, Signature entity_signature) const {
-			// Notify each system that an entity's signature changed
-			for (const auto system_index : m_available_systems) {
-				const auto& system = m_systems[system_index];
-				const auto& signature = m_signatures[system_index];
-
-				// Entity signature matches system signature - insert into set
-				if ((entity_signature & signature) == signature) {
-					system->m_entities.insert(entity);
-				}
-				else {
-					// Entity signature does not match system signature - erase from set
-					system->m_entities.erase(entity);
-				}
-			}
-		}
-
-	private:
-		std::array<Signature, MAX_SYSTEMS> m_signatures{};
-		std::array<std::shared_ptr<System>, MAX_SYSTEMS> m_systems{};
-
-		std::deque<size_t> m_available_systems{};
-	};
-
 	class Registry {
 	public:
 		Registry() {
 			m_component_manager = std::make_unique<ComponentManager>();
 			m_entity_manager = std::make_unique<EntityManager>();
-			m_system_manager = std::make_unique<SystemManager>();
 		}
 
 		// Implements structured binding iterator
@@ -448,7 +369,7 @@ namespace ecs {
 
 			void each(const auto& callback) {
 				for (auto entity : *this) {
-					callback(m_component_manager->get_component<Components>(entity)...);
+					callback(entity, m_component_manager->get_component<Components>(entity)...);
 				}
 			}
 
@@ -464,7 +385,7 @@ namespace ecs {
 		template <typename ... Components>
 		Signature create_signature() {
 			Signature signature;
-			std::array components{ type_id<Components>... };
+			const std::array components{ type_id<Components>... };
 			for (auto component : components) {
 				signature.set(component);
 			}
@@ -497,7 +418,7 @@ namespace ecs {
 
 			m_component_manager->on_entity_destroyed(entity);
 
-			m_system_manager->on_entity_destroyed(entity);
+			//m_system_manager->on_entity_destroyed(entity);
 
 			m_used_entities.erase(entity);
 		}
@@ -510,7 +431,7 @@ namespace ecs {
 			signature.set(m_component_manager->get_component_type<T>(), true);
 			m_entity_manager->set_signature(entity, signature);
 
-			m_system_manager->on_entity_signature_changed(entity, signature);
+			//m_system_manager->on_entity_signature_changed(entity, signature);
 
 			return new_component;
 		}
@@ -525,8 +446,6 @@ namespace ecs {
 			signature.set(m_component_manager->get_component_type<T>(), false);
 			// Update components signature in entity manager
 			m_entity_manager->set_signature(entity, signature);
-
-			m_system_manager->on_entity_signature_changed(entity, signature);
 		}
 
 		template <typename T>
@@ -549,23 +468,6 @@ namespace ecs {
 			return m_component_manager->get_component_type<T>();
 		}
 
-
-		// System methods
-		template <typename T>
-		std::shared_ptr<T> register_system() {
-			return m_system_manager->register_system<T>(this);
-		}
-
-		template <typename T>
-		void set_system_signature(Signature signature) const {
-			m_system_manager->set_signature<T>(signature);
-		}
- 
-		template <typename T, typename ... Components>
-		void set_system_signature() {
-			m_system_manager->set_signature<T>(create_signature<Components...>());
-		}
-
 		size_t get_entity_count() const {
 			return m_used_entities.size();
 		}
@@ -573,7 +475,7 @@ namespace ecs {
 	private:
 		std::unique_ptr<ComponentManager> m_component_manager{};
 		std::unique_ptr<EntityManager> m_entity_manager{};
-		std::unique_ptr<SystemManager> m_system_manager{};
+		//std::unique_ptr<SystemManager> m_system_manager{};
 		std::set<Entity> m_used_entities{};
 	};
 }
