@@ -26,6 +26,6 @@ namespace logger {
 	template <typename... Args>
 	void info(const std::string_view str_fmt, Args&&... args) { 
 		const auto formatted = std::vformat(str_fmt, std::make_format_args(args...));
-		internal::print("{}[INF]{} {}\n", colors::LIGHT_BLUE, colors::RESET, formatted);
+		internal::print("{}[INFO]{} {}\n", colors::LIGHT_BLUE, colors::RESET, formatted);
 	}
 }
