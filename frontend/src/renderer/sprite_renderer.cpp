@@ -1,4 +1,4 @@
-#include "renderer.hpp"
+#include "sprite_renderer.hpp"
 
 SpriteRenderer::SpriteRenderer(glm::mat4 projection, int max_instances)
 	// TODO: don't use relative paths like this

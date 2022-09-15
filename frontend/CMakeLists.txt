@@ -9,7 +9,7 @@ add_executable (${PROJECT_NAME}
 	"src/misc/stb.cpp"
 	"src/misc/utils.hpp"
 	"src/renderer/font_renderer.cpp"
-	"src/renderer/renderer.cpp"
+	"src/renderer/sprite_renderer.cpp"
 	"src/renderer/shader/shader.cpp"
 	"src/renderer/texture/texture.cpp")
 

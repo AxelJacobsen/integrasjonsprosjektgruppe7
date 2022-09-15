@@ -1,5 +1,5 @@
 #pragma once
-#include "../renderer/renderer.hpp"
+#include "../renderer/sprite_renderer.hpp"
 #include "../renderer/font_renderer.hpp"
 
 class FPS {
