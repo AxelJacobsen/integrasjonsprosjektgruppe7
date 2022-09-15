@@ -6,30 +6,9 @@
 #include "shader/shader.hpp"
 #include "texture/texture.hpp"
 
-struct GLFWwindow;
-
 struct Sprite {
 	glm::vec2 offset{};
 	glm::vec2 size{};
-};
-
-struct SpriteVertex {
-	glm::vec2 position{};
-	glm::vec2 tex_coords{};
-};
-
-struct SpriteInstanceVertex {
-	glm::vec2 grid_offset{};
-	glm::vec2 grid_size{};
-	glm::mat4 transformation{};
-};
-
-struct InstanceInfo {
-	glm::vec2 position{ 0 };
-	glm::vec2 scale{ 0 };
-	float rotation{ 0 };
-	glm::vec2 grid_offset{ 0 };
-	glm::vec2 grid_size{ 0 };
 };
 
 class SpriteRenderer {
@@ -52,6 +31,25 @@ public:
 	void render();
 
 private:	
+	struct SpriteVertex {
+		glm::vec2 position{};
+		glm::vec2 tex_coords{};
+	};
+
+	struct SpriteInstanceVertex {
+		glm::vec2 grid_offset{};
+		glm::vec2 grid_size{};
+		glm::mat4 transformation{};
+	};
+
+	struct InstanceInfo {
+		glm::vec2 position{ 0 };
+		glm::vec2 scale{ 0 };
+		float rotation{ 0 };
+		glm::vec2 grid_offset{ 0 };
+		glm::vec2 grid_size{ 0 };
+	};
+
 	InstanceInfo& next_instance() {
 		VERIFY(m_instance_count < m_max_instance_count, "Instance limit reached!");
 		return m_instances.at(m_instance_count++);
@@ -82,8 +80,8 @@ private:
 	VBO m_instance_vbo{};
 	EBO m_ebo{};
 
-	std::vector<InstanceInfo> m_instances;
-	std::vector<SpriteInstanceVertex> m_instance_data;
+	std::vector<InstanceInfo> m_instances{};
+	std::vector<SpriteInstanceVertex> m_instance_data{};
 
 	int m_max_instance_count{ 0 };
 	int m_instance_count{0};
