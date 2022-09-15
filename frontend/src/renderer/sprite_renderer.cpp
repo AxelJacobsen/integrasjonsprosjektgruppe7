@@ -1,5 +1,7 @@
 #include "sprite_renderer.hpp"
 
+// TODO: attach sprites to entities, only update if marked as changed
+
 SpriteRenderer::SpriteRenderer(glm::mat4 projection, int max_instances)
 	// TODO: don't use relative paths like this
 	: m_shader("../../../data/shaders/sprite.vert", "../../../data/shaders/sprite.frag"), m_max_instance_count(max_instances) {
@@ -59,6 +61,7 @@ void SpriteRenderer::draw_sprite(glm::vec2 pos, float angle, glm::vec2 scale,
 
 void SpriteRenderer::update_transformations() {
 	static constexpr glm::mat4 i_mat = glm::mat4(1);
+	// TODO: only update when changed
 	for (int i = 0; i < m_instance_count; i++) {
 		const auto& instance = m_instances[i];
 
