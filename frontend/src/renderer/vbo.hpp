@@ -32,7 +32,7 @@ public:
     void allocate(const GLsizeiptr size) const {
 		bind();
         // Allocate buffer
-        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STREAM_DRAW);
     }
 
 private:
