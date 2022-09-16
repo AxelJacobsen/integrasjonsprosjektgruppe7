@@ -1,4 +1,4 @@
-﻿#include "misc/settings.hpp"
+#include "misc/settings.hpp"
 #include "game/game.hpp"
 
 
@@ -25,6 +25,9 @@ int main() {
 
 	// Set the window as the current context
 	glfwMakeContextCurrent(window);
+
+	// Disable vsync
+	glfwSwapInterval(0);
 
 	// Initialize GLAD
 	VERIFY(gladLoadGL() == GL_TRUE);
