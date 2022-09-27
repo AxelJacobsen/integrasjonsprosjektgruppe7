@@ -9,6 +9,10 @@
 #include <fstream>
 #include <source_location>
 #include <format>
+#include <bitset>
+#include <cstdint>
+#include <queue>
+#include <set>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

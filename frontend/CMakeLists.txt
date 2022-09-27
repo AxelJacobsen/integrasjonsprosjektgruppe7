@@ -9,7 +9,7 @@ add_executable (${PROJECT_NAME}
 	"src/misc/stb.cpp"
 	"src/misc/utils.hpp"
 	"src/renderer/font_renderer.cpp"
-	"src/renderer/renderer.cpp"
+	"src/renderer/sprite_renderer.cpp"
 	"src/renderer/shader/shader.cpp"
 	"src/renderer/texture/texture.cpp")
 
@@ -39,3 +39,16 @@ add_subdirectory(third_party/glad)
 add_subdirectory(third_party/glfw)
 add_subdirectory(third_party/glm)
 add_subdirectory(third_party/freetype)
+add_subdirectory(third_party/catch2)
+
+# Set up and discover tests
+add_executable(tests "tests/test_ecs.cpp")
+set_property(TARGET tests PROPERTY CXX_STANDARD 20)
+target_include_directories(tests PRIVATE "third_party/")
+target_link_libraries(tests PRIVATE glm glfw glad OpenGL::GL freetype Catch2::Catch2WithMain)
+target_precompile_headers(tests PRIVATE "src/pch.hpp")
+
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)

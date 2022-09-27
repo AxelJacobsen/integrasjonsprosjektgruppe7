@@ -5,7 +5,7 @@ class Texture {
 public:
 	static std::optional<Texture> create(std::string_view texture_path);
 
-	const glm::ivec2& size() const {
+	[[nodiscard]] const glm::ivec2& size() const {
 		return m_size;
 	}
 

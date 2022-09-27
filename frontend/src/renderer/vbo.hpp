@@ -8,7 +8,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, m_id);
     }
 
-    void unbind() {
+    void unbind() const {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
@@ -24,13 +24,15 @@ public:
 
     template<typename T>
     void update(const T* buffer_data, const GLsizeiptr size, const GLintptr offset = 0) {
+		bind();
         // Transfer buffer data
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, buffer_data);
     }
 
     void allocate(const GLsizeiptr size) const {
+		bind();
         // Allocate buffer
-        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STREAM_DRAW);
     }
 
 private:

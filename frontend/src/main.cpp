@@ -1,5 +1,4 @@
-﻿#include <iostream>
-#include "misc/settings.hpp"
+﻿#include "misc/settings.hpp"
 #include "game/game.hpp"
 
 
@@ -27,6 +26,9 @@ int main() {
 	// Set the window as the current context
 	glfwMakeContextCurrent(window);
 
+	// Disable vsync
+	glfwSwapInterval(0);
+
 	// Initialize GLAD
 	VERIFY(gladLoadGL() == GL_TRUE);
 
@@ -37,9 +39,9 @@ int main() {
 #endif
 
 
+	// Initialize the game
 	Game game;
 	game.init(window);
-
 
 	glViewport(0, 0, static_cast<int>(settings::window_size.x), static_cast<int>(settings::window_size.y));
 	glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
@@ -86,8 +88,8 @@ void GLAPIENTRY message_callback(GLenum source,
                                  const GLchar* message,
                                  const void* userParam) {
 	if (type == GL_DEBUG_TYPE_ERROR) {
-		logger::error("[GL] type {}, severity = {}, message = {}", type, severity, message);
+		logger::error("[GL] type {}, {}", type, message);
 	} else {
-		logger::warning("[GL] type {}, severity = {}, message = {}", type, severity, message);
+		logger::warning("[GL] type {}, {}", type, message);
 	}
 }

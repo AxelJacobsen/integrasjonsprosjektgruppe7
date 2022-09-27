@@ -2,7 +2,8 @@
 
 class Shader {
 public:
-	static std::optional<Shader> create(std::string_view vertex_src_path, std::string_view fragment_src_path);
+	Shader() = default;
+	Shader(std::string_view vertex_src_path, std::string_view fragment_src_path);
 
 	void set_mat4(std::string_view name, const glm::mat4& matrix) const;
 	void set_1f(std::string_view name, float val) const;

@@ -9,13 +9,17 @@ public:
         bind();
     }
 
-    void link_attrib(GLuint layout, GLint num_components, GLenum type, GLboolean normalized, GLsizei stride, uintptr_t offset) {
+    void link_attrib(GLuint layout, GLint num_components, GLenum type, GLboolean normalized, GLsizei stride, uintptr_t offset, bool instanced = false) {
         // Tell OpenGL how to interpret data at 'layout'
 		glVertexAttribPointer(layout, num_components, type, normalized, stride,
 			const_cast<const void*>(reinterpret_cast<void*>(offset)));
 
         // Enable the attribute
         glEnableVertexAttribArray(layout);
+
+		if (instanced) {
+			glVertexAttribDivisor(layout, 1);
+		}
     }
 
     void bind() const {

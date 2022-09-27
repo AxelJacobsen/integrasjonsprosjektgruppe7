@@ -1,6 +1,7 @@
 #include "font_renderer.hpp"
 
-FontRenderer::FontRenderer(glm::mat4 projection) {
+FontRenderer::FontRenderer(glm::mat4 projection) 
+	: m_shader("../../../data/shaders/font.vert", "../../../data/shaders/font.frag") {
 	m_vao.initialize_and_bind();
 	m_vbo.initialize_and_bind();
 
@@ -8,11 +9,6 @@ FontRenderer::FontRenderer(glm::mat4 projection) {
 
 	// Tell OpenGL how to interpret our vertex data
 	m_vao.link_attrib(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-
-	auto shader = Shader::create("../../../data/shaders/font.vert", "../../../data/shaders/font.frag");
-	VERIFY(shader.has_value(), "Failed to load font shader!");
-
-	m_shader = shader.value();
 
 	// Set projection
 	m_shader.set_mat4("projection", projection);
@@ -45,7 +41,7 @@ FontRenderer::FontRenderer(glm::mat4 projection) {
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glTexImage2D(GL_TEXTURE_2D,
-		             0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows,
+		             0, GL_RED, static_cast<GLsizei>(face->glyph->bitmap.width), static_cast<GLsizei>(face->glyph->bitmap.rows),
 		             0, GL_RED,
 		             GL_UNSIGNED_BYTE,
 		             face->glyph->bitmap.buffer);
@@ -80,21 +76,20 @@ void FontRenderer::draw_text(std::string text, glm::vec2 pos, float scale, glm::
 	m_vao.bind();
 	m_vbo.bind();
 
-	std::string::const_iterator c;
-	for (c = text.begin(); c != text.end(); c++) {
-		const auto& ch = m_characters.at(*c);
+	for (auto c : text) {
+		const auto& ch = m_characters.at(c);
 
-		const auto line_height = (static_cast<int>(ch.ascender - ch.descender) >> 6) * scale;
+		const auto line_height = static_cast<float>((ch.ascender - ch.descender) >> 6) * scale;
 
-		float xpos = pos.x + ch.bearing.x * scale;
-		float ypos = pos.y - ch.bearing.y * scale;
+		float xpos = pos.x + static_cast<float>(ch.bearing.x) * scale;
+		float ypos = pos.y - static_cast<float>(ch.bearing.y) * scale;
 		ypos += line_height;
 
-		float w = ch.size.x * scale;
-		float h = ch.size.y * scale;
+		const float w = static_cast<float>(ch.size.x) * scale;
+		const float h = static_cast<float>(ch.size.y) * scale;
 
 		// Update VBO for each character
-        float vertices[6][4] = {
+        const float vertices[6][4] = {
             { xpos,     ypos + h,   0.0f, 1.0f }, // Bottom left
             { xpos,     ypos,       0.0f, 0.0f }, // Top left
             { xpos + w, ypos,       1.0f, 0.0f }, // Top right
@@ -111,7 +106,7 @@ void FontRenderer::draw_text(std::string text, glm::vec2 pos, float scale, glm::
 
 		// Draw
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		pos.x += (ch.advance >> 6) * scale;
+		pos.x += static_cast<float>(ch.advance >> 6) * scale;
 	}
 
 	m_vao.unbind();
